@@ -1,0 +1,145 @@
+alias: Circadian lysrutine
+description: ""
+trigger:
+  - platform: state
+    entity_id: input_boolean.godnat
+    from: "on"
+    to: "off"
+  - platform: state
+    entity_id: group.family
+    from: not_home
+    to: home
+  - type: illuminance
+    platform: device
+    device_id: b7393818d3b1c99a49c951c77da86718
+    entity_id: sensor.koekken_motion_01_illuminance_lux
+    domain: sensor
+    below: 600
+condition:
+  - condition: state
+    entity_id: input_boolean.godnat
+    state: "off"
+  - condition: state
+    entity_id: input_boolean.bypass_light_routine
+    state: "off"
+  - condition: or
+    conditions:
+      - condition: state
+        entity_id: input_boolean.guest_mode
+        state: "on"
+      - condition: state
+        entity_id: group.family
+        state: home
+action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id:
+        - switch.circadian_lighting_circadian_garderobe
+        - switch.circadian_lighting_circadian_tv_mobel_pladespiller
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: light.turn_on
+    data:
+      kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') | int }}"
+      brightness_pct: >-
+        {{
+        state_attr('switch.circadian_lighting_circadian_tv_mobel_pladespiller',
+        'brightness') | int }}
+    target:
+      entity_id: light.circadian_stue_lights_zgrp
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: light.turn_on
+    data:
+      kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') | int }}"
+      brightness_pct: >-
+        {{ state_attr('switch.circadian_lighting_circadian_hallway',
+        'brightness') | int }}
+    target:
+      entity_id: light.gang_loftlamper_zgrp
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: light.turn_on
+    data:
+      kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') | int }}"
+      brightness_pct: >-
+        {{ state_attr('switch.circadian_lighting_circadian_kokken',
+        'brightness') | int }}
+    target:
+      entity_id: light.koekken_lights_zgrp
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: light.turn_on
+    data:
+      kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') | int }}"
+      brightness_pct: >-
+        {{ state_attr('switch.circadian_lighting_circadian_kokken',
+        'brightness') | int }}
+    target:
+      entity_id: light.ct_lights_spisebord_zgrp
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: light.turn_on
+    data:
+      kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') | int }}"
+      brightness_pct: >-
+        {{ state_attr('switch.circadian_lighting_circadian_hobbyrum',
+        'brightness') | int }}
+    target:
+      entity_id: light.hobbyrum_bordlampe_01
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: light.turn_on
+    data:
+      kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') | int }}"
+      brightness_pct: >-
+        {{ state_attr('switch.circadian_lighting_circadian_kontor_bordlampe',
+        'brightness') | int }}
+    target:
+      entity_id: light.kontor_bordlampe_01
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: light.turn_on
+    data:
+      kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') | int }}"
+      brightness_pct: >-
+        {{ state_attr('switch.circadian_lighting_circadian_stue', 'brightness')
+        | int }}
+    target:
+      entity_id: light.ct_lights_stue_zgrp
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: light.turn_on
+    data:
+      kelvin: "{{ state_attr('sensor.circadian_values', 'colortemp') | int }}"
+      brightness_pct: >-
+        {{ state_attr('switch.circadian_lighting_circadian_garderobe',
+        'brightness') | int }}
+    target:
+      entity_id: light.rgb_lights_garderobe_zgrp
+mode: single
